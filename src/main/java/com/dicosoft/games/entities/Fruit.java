@@ -1,8 +1,9 @@
-package com.dicosoft.games;
+package com.dicosoft.games.entities;
+
+import com.dicosoft.games.SnakeHandler;
 
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 public class Fruit extends Rectangle2D.Double {
@@ -14,7 +15,7 @@ public class Fruit extends Rectangle2D.Double {
             randomPositionX = getRandomPosition(random);
             randomPositionY = getRandomPosition(random);
         }
-        x = randomPositionX ;
+        x = randomPositionX;
         y = randomPositionY;
         width = 10;
         height = 10;

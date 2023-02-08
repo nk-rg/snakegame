@@ -1,5 +1,7 @@
 package com.dicosoft.games;
 
+import com.dicosoft.games.entities.Fruit;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,16 +13,18 @@ import static java.awt.event.KeyEvent.*;
 import static javax.swing.SwingConstants.*;
 
 public class GameContainer extends JPanel implements ActionListener, KeyListener {
-    private int movementTime = 400;
-    private final Timer timer = new Timer(movementTime, this);
-    private SnakeHandler snakeHandler = null;
+    public static final int WIDTH = 500;
+    public static final int HEIGHT = 500;
+    private SnakeHandler snake = null;
     private Fruit fruit = null;
     private int movement;
+    private int delayMovement = 200;
+    private final Timer timer = new Timer(delayMovement, this);
 
     public GameContainer() {
         setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
-        setSize(500, 500);
-        setPreferredSize(new Dimension(500, 500));
+        setSize(WIDTH, HEIGHT);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
     @Override
@@ -33,20 +37,20 @@ public class GameContainer extends JPanel implements ActionListener, KeyListener
     }
 
     private void drawSnake(Graphics2D graphics2D) {
-        if (snakeHandler.intersectsHeadAndFruit(fruit)) {
-            snakeHandler.addNewPart();
+        if (snake.collapse(fruit)) {
+            snake.addNewPart();
             increaseSpeed();
-            fruit = new Fruit(snakeHandler);
+            fruit = new Fruit(snake);
         }
-        snakeHandler.calculateSnakePartsPosition(movement);
-        snakeHandler.drawSnake(graphics2D);
+        snake.calculateBodyPartsPosition(movement);
+        snake.draw(graphics2D);
     }
 
     private void increaseSpeed() {
-        if (movementTime != 50) {
+        if (delayMovement >= 10) {
             timer.stop();
-            movementTime -= 50;
-            timer.setDelay(movementTime);
+            delayMovement = delayMovement * 95 / 100;
+            timer.setDelay(delayMovement);
             timer.start();
         }
     }
@@ -59,24 +63,28 @@ public class GameContainer extends JPanel implements ActionListener, KeyListener
 
     public void initGame() {
         movement = RIGHT;
-        movementTime = 500;
-        int positionSnakeHeadX = (getWidth() / 4) - (getWidth() / 4 % 10);
-        int positionSnakeHeadY = (getHeight() / 2) - (getHeight() / 2 % 10);
-        snakeHandler = new SnakeHandler(positionSnakeHeadX, positionSnakeHeadY);
-        fruit = new Fruit(snakeHandler);
+        delayMovement = 500;
+        int snakePositionX = (getWidth() / 4) - (getWidth() / 4 % 10);
+        int snakePositionY = (getHeight() / 2) - (getHeight() / 2 % 10);
+        Point position = new Point(snakePositionX, snakePositionY);
+        snake = new SnakeHandler(position);
+        fruit = new Fruit(snake);
         timer.stop();
-        timer.setDelay(movementTime);
+        timer.setDelay(delayMovement);
         timer.start();
     }
 
-    private boolean isGameOver() {
-        return snakeHandler.isOffScreen();
+    private void checkGameOver() {
+        if (isGameOver()) {
+            askPlayAgain();
+        }
     }
 
-    private void checkGameOver() {
-        if (!isGameOver()) {
-            return;
-        }
+    private boolean isGameOver() {
+        return snake.isOffScreen();
+    }
+
+    private void askPlayAgain() {
         int confirmDialog = JOptionPane.showConfirmDialog(null, "¿Quieres jugar de nuevo?");
         if (confirmDialog != JOptionPane.YES_OPTION) {
             System.exit(0);

@@ -1,5 +1,8 @@
 package com.dicosoft.games;
 
+import com.dicosoft.games.entities.Fruit;
+import com.dicosoft.games.entities.SnakePart;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,8 +14,8 @@ public class SnakeHandler {
 
     private final LinkedList<SnakePart> snakeParts = new LinkedList<>();
 
-    public SnakeHandler(int positionX, int positionY) {
-        snakeParts.add(new SnakePart(positionX, positionY, true));
+    public SnakeHandler(Point position) {
+        snakeParts.add(new SnakePart(position.x, position.y, true));
     }
 
     public void addNewPart() {
@@ -29,7 +32,7 @@ public class SnakeHandler {
         }
     }
 
-    public void calculateSnakePartsPosition(int movement) {
+    public void calculateBodyPartsPosition(int movement) {
         SnakePart head = snakeParts.getFirst();
         double nextPositionX = head.x;
         double nextPositionY = head.y;
@@ -56,14 +59,14 @@ public class SnakeHandler {
         }
     }
 
-    public void drawSnake(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D) {
         snakeParts.stream().filter(SnakePart::isVisible).forEach(snakePart -> {
             graphics2D.draw(snakePart);
             graphics2D.fill(snakePart);
         });
     }
 
-    public boolean intersectsHeadAndFruit(Fruit fruit) {
+    public boolean collapse(Fruit fruit) {
         return snakeParts.getFirst().intersects(fruit);
     }
 

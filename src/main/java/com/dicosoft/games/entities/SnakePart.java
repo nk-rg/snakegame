@@ -1,4 +1,4 @@
-package com.dicosoft.games;
+package com.dicosoft.games.entities;
 
 import java.awt.geom.Rectangle2D;
 

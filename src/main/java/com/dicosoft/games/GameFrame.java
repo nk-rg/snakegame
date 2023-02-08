@@ -15,12 +15,10 @@ public class GameFrame extends JFrame {
     }
 
     private void setFramePosition() {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int widthGame = 500;
-        int heightGame = 500;
-        int positionX = (dimension.width - widthGame) / 2;
-        int positionY = (dimension.height - heightGame) / 2;
-        setBounds(positionX, positionY, widthGame, heightGame);
+        Dimension systemDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int positionX = (systemDimension.width - GameContainer.WIDTH) / 2;
+        int positionY = (systemDimension.height - GameContainer.HEIGHT) / 2;
+        setBounds(positionX, positionY, GameContainer.WIDTH, GameContainer.HEIGHT);
     }
 
     public void start() {
